@@ -1,169 +1,165 @@
 import CRUD from "../Models/CRUD.js";
 import Usuario from "../Models/Usuario.js";
 
-class CiudadService {
-  static async getCiudades(table) {
+class GeneroService {
+  static async getGeneros(table) {
     try {
       const objCRUD = new CRUD();
-      const ciudades = await objCRUD.getAll(table, "las ciudades");
+      const generos = await objCRUD.getAll(table, "los géneros");
 
-      if (ciudades.length === 0)
+      if (generos.length === 0)
         return {
           error: true,
           code: 404,
-          message: "No hay ciudades registradas.",
+          message: "No hay géneros registrados.",
         };
       return {
         error: false,
         code: 200,
-        message: "Ciudades obtenidas correctamente.",
-        data: ciudades,
+        message: "Géneros obtenidos correctamente.",
+        data: generos,
       };
     } catch (error) {
       return {
         error: true,
         code: 500,
-        message: "Error al obtener las ciudades.",
+        message: "Error al obtener los géneros.",
       };
     }
   }
 
-  static async getCiudadByID(id) {
+  static async getGeneroByID(id) {
     try {
       const objCRUD = new CRUD();
       // Llamamos el método consultar por ID
-      const ciudad = await objCRUD.getByID("ciudades", id, "la ciudad");
+      const genero = await objCRUD.getByID("generos", id, "el género");
       // Validamos si no hay producto
-      if (ciudad.length === 0) {
+      if (genero.length === 0) {
         return {
           error: true,
           code: 404,
-          message: "Ciudad no encontrada",
+          message: "Género no encontrado",
         };
       }
       // Retornamos el producto obtenido
       return {
         error: false,
         code: 200,
-        message: "Ciudad obtenida correctamente",
-        data: ciudad,
+        message: "Género obtenido correctamente",
+        data: genero,
       };
     } catch (error) {
       // Retornamos un error en caso de excepción
       return {
         error: true,
         code: 500,
-        message: "Error al obtener la ciudad",
+        message: "Error al obtener el género",
       };
     }
   }
 
-  static async createCiudad(campos) {
+  static async createGenero(campos) {
     try {
       // Validamos que el id de la categoría este registrado
       const objCRUD = new CRUD();
       // Consultamos la categoría por ID
-      const ciudadCreada = await objCRUD.create(
-        "ciudades",
-        campos,
-        "la ciudad"
-      );
+      const generoCreado = await objCRUD.create("generos", campos, "el género");
       // Validamos si no hay categoría
 
       return {
         error: false,
         code: 201,
-        message: "Ciudad creada correctamente",
-        data: ciudadCreada,
+        message: "Género creado correctamente",
+        data: generoCreado,
       };
     } catch (error) {
       // Retornamos un error en caso de excepción
       return {
         error: true,
         code: 500,
-        message: "Error al crear la ciudad",
+        message: "Error al crear el género",
       };
     }
   }
 
-  static async updateCiudad(id, campos) {
+  static async updateGenero(id, campos) {
     try {
       // Creamos la instancia del modelo producto
       const objCRUD = new CRUD();
       // Llamamos el método actualizar
-      const ciudadActualizada = await objCRUD.update(
-        "ciudades",
+      const generoActualizado = await objCRUD.update(
+        "generos",
         id,
         campos,
-        "la ciudad"
+        "el género"
       );
       // Validamos si no se pudo actualizar el producto
-      if (ciudadActualizada === null) {
+      if (generoActualizado === null) {
         return {
           error: true,
           code: 400,
-          message: "Ciudad no encontrada",
+          message: "Género no encontrado",
         };
       }
       // Retornamos el producto actualizado
       return {
         error: false,
         code: 200,
-        message: "Ciudad actualizada correctamente",
-        data: ciudadActualizada,
+        message: "Género actualizado correctamente",
+        data: generoActualizado,
       };
     } catch (error) {
       // Retornamos un error en caso de excepción
       return {
         error: true,
         code: 500,
-        message: "Error al actualizar la ciudad",
+        message: "Error al actualizar el género",
       };
     }
   }
 
-  static async deleteCiudad(id) {
+  static async deleteGenero(id) {
     try {
       //Creamos la instancia del modelo Usuario
       const objUsuario = new Usuario();
 
-      const usuariosRelacionados = await objUsuario.getCiudadByIdUsuario(id);
+      const usuariosRelacionados = await objUsuario.getGeneroByIdGenero(id);
 
       if (usuariosRelacionados.length > 0) {
         return {
           error: true,
           code: 400,
-          message: "No se puede eliminar la ciudad, tiene usuarios asociados",
+          message: "No se puede eliminar el genero, tiene usuarios asociados",
         };
       }
 
       // Creamos la instancia del modelo producto
       const objCRUD = new CRUD();
       // Llamamos el método eliminar
-      const ciudadEliminada = await objCRUD.delete("ciudades", id, "la ciudad");
+      const generoEliminado = await objCRUD.delete("generos", id, "el género");
       // Validamos si no se pudo eliminar el producto
-      if (!ciudadEliminada) {
+      if (!generoEliminado) {
         return {
           error: true,
           code: 400,
-          message: "Ciudad no encontrada",
+          message: "Género no encontrado",
         };
       }
       // Retornamos el producto eliminado
       return {
         error: false,
         code: 200,
-        message: "Ciudad eliminada correctamente",
+        message: "Género eliminado correctamente",
       };
     } catch (error) {
       // Retornamos un error en caso de excepción
       return {
         error: true,
         code: 500,
-        message: "Error al eliminar la ciudad",
+        message: "Error al eliminar el género",
       };
     }
   }
 }
 
-export default CiudadService;
+export default GeneroService;

@@ -3,15 +3,19 @@ import LenguajeUsuarioController from "../Controller/LenguajeUsuarioController.j
 
 const router = express.Router();
 
-// router.get("/", CiudadesController.getAllCategorias);
+// router.get("/", GenerosController.getAllCategorias);
+router.get("/", LenguajeUsuarioController.getAllLenguajeUsuarios);
 
-router.get("/:id", LenguajeUsuarioController.getLenguajeUsuarioByID);
+router.get("/:id", LenguajeUsuarioController.getLenguajeUsuarioById);
 
-router.post("/", LenguajeUsuarioController.createLenguajeUsuario);
+router.post(
+  "/",
+  /*validarCategoria,*/ LenguajeUsuarioController.createLenguajeUsuario
+);
 
 router.put("/:id", LenguajeUsuarioController.updateLenguajeUsuario);
 
-router.patch("/:id", LenguajeUsuarioController.patchLenguajeUsuario);
+router.patch("/:id", LenguajeUsuarioController.updateLenguajeUsuario);
 
 router.delete("/:id", LenguajeUsuarioController.deleteLenguajeUsuario);
 

@@ -1,69 +1,144 @@
-import LenguajeUsuario from "../Models/LenguajeUsuario.js";
+import { ResponseProvider } from "../Providers/ResponseProvider.js";
+import LenguajeUsuarioService from "../Services/LenguajeUsuarioService.js";
 
 class LenguajeUsuarioController {
-  static getLenguajeUsuarioByID = async (req, res) => {
+  static getAllLenguajeUsuarios = async (req, res) => {
     try {
-      const { id } = req.params;
-      const objLenguajeUsuario = new LenguajeUsuario();
-      const lenguajeUsuario = await objLenguajeUsuario.getByID(id);
-      res.status(200).json(lenguajeUsuario);
+      const response = await LenguajeUsuarioService.getLenguajeUsuarios(
+        "lenguajes_usuarios"
+      );
+
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      return ResponseProvider.error(res, "Error interno en el servidor", 500);
+    }
+  };
+
+  static getLenguajeUsuarioById = async (req, res) => {
+    const { id } = req.params;
+    try {
+      // Llamamos al servicio para obtener el producto por su ID
+      const response = await LenguajeUsuarioService.getLenguajeUsuarioByID(id);
+      // Validamos si no hay producto
+      if (response.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      return ResponseProvider.error(res, "Error interno en el servidor", 500);
     }
   };
 
   static createLenguajeUsuario = async (req, res) => {
     try {
-      const { id_usuario, id_lenguaje } = req.body;
-      const objLenguajeUsuario = new LenguajeUsuario();
-      const lenguajeUsuario = await objLenguajeUsuario.create(
-        id_usuario,
-        id_lenguaje
+      const object = req.body;
+      const response = await LenguajeUsuarioService.createLenguajeUsuario(
+        object
       );
-      res.status(201).json(lenguajeUsuario);
+
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      return ResponseProvider.error(
+        res,
+        "Error interno al crear la ciudad",
+        500
+      );
     }
   };
 
+  // Actualizar un producto
   static updateLenguajeUsuario = async (req, res) => {
     try {
       const { id } = req.params;
-      const { id_usuario, id_lenguaje } = req.body;
-      const objLenguajeUsuario = new LenguajeUsuario();
-      const lenguajeUsuario = await objLenguajeUsuario.update(
+      const campos = req.body;
+      // Creamos una instancia de producto
+      const response = await LenguajeUsuarioService.updateLenguajeUsuario(
         id,
-        id_usuario,
-        id_lenguaje
+        campos
       );
-      res.status(201).json(lenguajeUsuario);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  };
 
-  static patchLenguajeUsuario = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const object = req.body;
-      const objLenguajeUsuario = new LenguajeUsuario();
+      // Validamos si no se pudo actualizar el producto
 
-      const lenguajeUsuario = await objLenguajeUsuario.patch(id, object);
-      res.status(201).json(lenguajeUsuario);
+      //ESTABA HACIENDO EL PUT DE CIUDAD
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      // Retornamos el producto actualizado
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      return ResponseProvider.error(
+        res,
+        "Error interno al actualizar la ciudad",
+        500
+      );
     }
   };
 
   static deleteLenguajeUsuario = async (req, res) => {
+    // try {
+    //   const { id } = req.params;
+    //   const objCiudad = new Ciudad();
+
+    //   const ciudad = await objCiudad.delete(id);
+    //   res.status(201).json(ciudad);
+    // } catch (error) {
+    //   res.status(400).json({ error: error.message });
+    // }
+
     try {
       const { id } = req.params;
-      const objLenguajeUsuario = new LenguajeUsuario();
+      // Creamos una instancia de producto
+      const response = await LenguajeUsuarioService.deleteLenguajeUsuario(id);
 
-      const lenguajeUsuario = await objLenguajeUsuario.delete(id);
-      res.status(201).json(lenguajeUsuario);
+      // Validamos si no se pudo actualizar el producto
+
+      //ESTABA HACIENDO EL PUT DE CIUDAD
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      // Retornamos el producto actualizado
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      return ResponseProvider.error(
+        res,
+        "Error interno al actualizar la ciudad",
+        500
+      );
     }
   };
 }

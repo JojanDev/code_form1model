@@ -1,99 +1,113 @@
-import Usuario from "../Models/Usuario.js";
+import { ResponseProvider } from "../Providers/ResponseProvider.js";
+import UsuarioService from "../Services/UsuarioService.js";
 
 class UsuarioController {
-  static getUsuarioByID = async (req, res) => {
+  static getAllUsuarios = async (req, res) => {
     try {
-      const { id } = req.params;
-      const objUsuario = new Usuario();
-      const ciudad = await objUsuario.getByID(id);
-      res.status(200).json(ciudad);
+      const response = await UsuarioService.getUsuarios("usuarios");
+
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      return ResponseProvider.error(res, "Error interno en el servidor", 500);
+    }
+  };
+
+  static getUsuarioById = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const response = await UsuarioService.getUsuarioByID(id);
+
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      return ResponseProvider.error(res, "Error interno en el servidor", 500);
     }
   };
 
   static createUsuario = async (req, res) => {
     try {
-      const {
-        nombre,
-        apellido,
-        telefono,
-        documento,
-        usuarioI,
-        contrasena,
-        id_genero,
-        id_ciudad,
-      } = req.body;
-      const objUsuario = new Usuario();
-      const usuario = await objUsuario.create(
-        nombre,
-        apellido,
-        telefono,
-        documento,
-        usuarioI,
-        contrasena,
-        id_genero,
-        id_ciudad
+      const object = req.body;
+      const response = await UsuarioService.createUsuario(object);
+
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
       );
-      res.status(201).json(usuario);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      return ResponseProvider.error(
+        res,
+        "Error interno al crear el usuario",
+        500
+      );
     }
   };
 
   static updateUsuario = async (req, res) => {
     try {
       const { id } = req.params;
-      const {
-        nombre,
-        apellido,
-        telefono,
-        documento,
-        usuarioI,
-        contrasena,
-        id_genero,
-        id_ciudad,
-      } = req.body;
-      const objUsuario = new Usuario();
-      const usuario = await objUsuario.update(
-        id,
-        nombre,
-        apellido,
-        telefono,
-        documento,
-        usuarioI,
-        contrasena,
-        id_genero,
-        id_ciudad
+      const campos = req.body;
+
+      const response = await UsuarioService.updateUsuario(id, campos);
+
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
       );
-      res.status(201).json(usuario);
     } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  };
-
-  static patchUsuario = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const object = req.body;
-      const objUsuario = new Usuario();
-
-      const usuario = await objUsuario.patch(id, object);
-      res.status(201).json(usuario);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+      return ResponseProvider.error(
+        res,
+        "Error interno al actualizar el usuario",
+        500
+      );
     }
   };
 
   static deleteUsuario = async (req, res) => {
     try {
       const { id } = req.params;
-      const objUsuario = new Usuario();
+      const response = await UsuarioService.deleteUsuario(id);
 
-      const usuario = await objUsuario.delete(id);
-      res.status(201).json(usuario);
+      if (response.error)
+        return ResponseProvider.error(res, response.message, response.code);
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      return ResponseProvider.error(
+        res,
+        "Error interno al eliminar el usuario",
+        500
+      );
     }
   };
 }

@@ -1,12 +1,11 @@
-import { response } from "express";
-import Ciudad from "../Models/Ciudad.js";
-import { ResponseProvider } from "../Providers/ResponseProvider.js";
-import CiudadService from "../Services/CiudadService.js";
-import CRUD from "../Models/CRUD.js";
+//Importaciones
+import { ResponseProvider } from "../Providers/ResponseProvider.js"; //Clase "formato" de respuesta
+import CiudadService from "../Services/CiudadService.js"; //Servicio de ciudad
 
 class CiudadController {
   static getAllCiudades = async (req, res) => {
     try {
+      //
       const response = await CiudadService.getCiudades("ciudades");
 
       if (response.error)
