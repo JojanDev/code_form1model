@@ -127,7 +127,7 @@ class CiudadService {
       //Creamos la instancia del modelo Usuario
       const objUsuario = new Usuario();
 
-      const usuariosRelacionados = await objUsuario.getCiudadByIdUsuario(id);
+      const usuariosRelacionados = await objUsuario.getCiudadByIdCiudad(id);
 
       if (usuariosRelacionados.length > 0) {
         return {
