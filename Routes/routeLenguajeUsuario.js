@@ -1,5 +1,9 @@
 import express from "express";
 import LenguajeUsuarioController from "../Controller/LenguajeUsuarioController.js";
+import {
+  camposLenguajeUsuario,
+  parcialesLenguajeUsuario,
+} from "../Middleware/LenguajeUsuario/index.js";
 
 const router = express.Router();
 
@@ -10,12 +14,21 @@ router.get("/:id", LenguajeUsuarioController.getLenguajeUsuarioById);
 
 router.post(
   "/",
-  /*validarCategoria,*/ LenguajeUsuarioController.createLenguajeUsuario
+  camposLenguajeUsuario,
+  LenguajeUsuarioController.createLenguajeUsuario
 );
 
-router.put("/:id", LenguajeUsuarioController.updateLenguajeUsuario);
+router.put(
+  "/:id",
+  camposLenguajeUsuario,
+  LenguajeUsuarioController.updateLenguajeUsuario
+);
 
-router.patch("/:id", LenguajeUsuarioController.updateLenguajeUsuario);
+router.patch(
+  "/:id",
+  parcialesLenguajeUsuario,
+  LenguajeUsuarioController.updateLenguajeUsuario
+);
 
 router.delete("/:id", LenguajeUsuarioController.deleteLenguajeUsuario);
 

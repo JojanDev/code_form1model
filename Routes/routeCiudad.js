@@ -1,5 +1,6 @@
 import express from "express";
 import CiudadController from "../Controller/CiudadController.js";
+import { camposCiudad } from "../Middleware/Ciudad/index.js";
 
 const router = express.Router();
 
@@ -8,11 +9,11 @@ router.get("/", CiudadController.getAllCiudades);
 
 router.get("/:id", CiudadController.getCiudadById);
 
-router.post("/", /*validarCategoria,*/ CiudadController.createCiudad);
+router.post("/", camposCiudad, CiudadController.createCiudad);
 
-router.put("/:id", CiudadController.updateCiudad);
+router.put("/:id", camposCiudad, CiudadController.updateCiudad);
 
-router.patch("/:id", CiudadController.updateCiudad);
+router.patch("/:id", camposCiudad, CiudadController.updateCiudad);
 
 router.delete("/:id", CiudadController.deleteCiudad);
 

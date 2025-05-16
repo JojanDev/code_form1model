@@ -5,21 +5,24 @@ import routeGenero from "./Routes/routeGenero.js";
 import routeLenguaje from "./Routes/routeLenguaje.js";
 import routeUsuario from "./Routes/routeUsuario.js";
 import routeLenguajeUsuario from "./Routes/routeLenguajeUsuario.js";
+import cors from "cors";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
 
+app.use(cors());
+
 app.use(bodyParser.json());
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/ciudades", routeCiudad);
-app.use("/genero", routeGenero);
-app.use("/lenguaje", routeLenguaje);
-app.use("/usuario", routeUsuario);
-app.use("/lenguajeUsuario", routeLenguajeUsuario);
+app.use("/generos", routeGenero);
+app.use("/lenguajes", routeLenguaje);
+app.use("/usuarios", routeUsuario);
+app.use("/lenguajes_usuarios", routeLenguajeUsuario);
 // app.use("/productos", routeProductos);
 
 const port = process.env.PORT || 3000;
