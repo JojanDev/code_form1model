@@ -128,6 +128,49 @@ class UsuarioService {
   static async updateUsuario(id, campos) {
     try {
       const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+
+      // Obtenemos todos los usuarios existentes para verificar si el usuario o el documento ya existen
+      const usuarios = await objCRUD.getAll("usuarios", "los usuarios");
+
+      // Verificamos si el nombre de usuario ya existe
+      const usernameExist = usuarios.find(
+        ({ id: idExistente, usuario }) =>
+          usuario === campos.usuario && idExistente !== parseInt(id)
+      );
+
+      const documentoExist = usuarios.find(
+        ({ id: idExistente, documento }) =>
+          documento == campos.documento && idExistente !== parseInt(id)
+      );
+
+      if (usernameExist) {
+        return {
+          error: true,
+          code: 400,
+          message: "Error al actualizar el usuario",
+          erros: [
+            {
+              campo: "usuario",
+              message: "El usuario con ese nombre ya existe.",
+            },
+          ],
+        };
+      }
+
+      if (documentoExist) {
+        return {
+          error: true,
+          code: 400,
+          message: "Error al actualizar el usuario",
+          erros: [
+            {
+              campo: "documento",
+              message: "El usuario con ese documento ya existe.",
+            },
+          ],
+        };
+      }
+
       // Actualizamos el usuario en la base de datos
       const usuarioActualizado = await objCRUD.update(
         "usuarios",

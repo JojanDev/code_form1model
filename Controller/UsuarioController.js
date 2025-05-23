@@ -5,7 +5,7 @@ import { ResponseProvider } from "../Providers/ResponseProvider.js";
 import UsuarioService from "../Services/UsuarioService.js";
 
 // Definimos la clase UsuarioController, encargada de manejar las solicitudes relacionadas con usuarios
-class UsuarioController {  
+class UsuarioController {
   // Método estático para obtener todos los usuarios
   static getAllUsuarios = async (req, res) => {
     try {
@@ -17,7 +17,12 @@ class UsuarioController {
         return ResponseProvider.error(res, response.message, response.code);
 
       // Si todo está bien, enviamos la respuesta con los datos obtenidos
-      return ResponseProvider.success(res, response.data, response.message, response.code);
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
       // Manejamos errores inesperados en el servidor
       return ResponseProvider.error(res, "Error interno en el servidor", 500);
@@ -36,7 +41,12 @@ class UsuarioController {
         return ResponseProvider.error(res, response.message, response.code);
 
       // Retornamos el usuario solicitado
-      return ResponseProvider.success(res, response.data, response.message, response.code);
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
       // Manejo de error en caso de falla del servidor
       return ResponseProvider.error(res, "Error interno en el servidor", 500);
@@ -51,13 +61,27 @@ class UsuarioController {
 
       // Verificamos si hubo error al crear
       if (response.error)
-        return ResponseProvider.error(res, response.message, response.code, response.erros);
+        return ResponseProvider.error(
+          res,
+          response.message,
+          response.code,
+          response.erros
+        );
 
       // Retornamos el usuario recién creado
-      return ResponseProvider.success(res, response.data, response.message, response.code);
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
       // Manejo de error en caso de falla del servidor
-      return ResponseProvider.error(res, "Error interno al crear el usuario", 500);
+      return ResponseProvider.error(
+        res,
+        "Error interno al crear el usuario",
+        500
+      );
     }
   };
 
@@ -75,14 +99,24 @@ class UsuarioController {
         return ResponseProvider.error(
           res,
           response.message,
-          response.code
+          response.code,
+          response.erros
         );
 
       // Retornamos el usuario actualizado
-      return ResponseProvider.success(res, response.data, response.message, response.code);
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
       // Manejo de error en caso de falla del servidor
-      return ResponseProvider.error(res, "Error interno al actualizar el usuario", 500);
+      return ResponseProvider.error(
+        res,
+        "Error interno al actualizar el usuario",
+        500
+      );
     }
   };
 
@@ -90,19 +124,28 @@ class UsuarioController {
   static deleteUsuario = async (req, res) => {
     try {
       const { id } = req.params; // Obtenemos el ID del usuario desde los parámetros de la URL
-      
+
       // Llamamos al servicio para eliminar el usuario
-      const response = await UsuarioService.deleteUsuario(id); 
+      const response = await UsuarioService.deleteUsuario(id);
 
       // Verificamos si hubo error en la eliminación
       if (response.error)
         return ResponseProvider.error(res, response.message, response.code);
 
       // Retornamos la respuesta de eliminación exitosa
-      return ResponseProvider.success(res, response.data, response.message, response.code);
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
       // Manejo de error en caso de falla del servidor
-      return ResponseProvider.error(res, "Error interno al eliminar el usuario", 500);
+      return ResponseProvider.error(
+        res,
+        "Error interno al eliminar el usuario",
+        500
+      );
     }
   };
 }
