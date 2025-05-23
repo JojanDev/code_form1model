@@ -3,11 +3,13 @@ import { ResponseProvider } from "../Providers/ResponseProvider.js"; //Clase "fo
 import CiudadService from "../Services/CiudadService.js"; //Servicio de ciudad
 
 class CiudadController {
+  //Metodo estatico para obtener todas las ciudades
   static getAllCiudades = async (req, res) => {
     try {
-      //
+      //Se envia el argumento a la funcion y obtiene la respuesta del servicio
       const response = await CiudadService.getCiudades("ciudades");
 
+      //Valida 
       if (response.error)
         return ResponseProvider.error(res, response.message, response.code);
 
