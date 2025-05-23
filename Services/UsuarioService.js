@@ -67,7 +67,10 @@ class UsuarioService {
         return {
           error: true,
           code: 400,
-          message: "El usuario con ese nombre de usuario ya existe.",
+          message: "Error al crear el usuario",
+          erros: [{
+            campo: "usuario",
+            message: "El usuario con ese nombre de usuario ya existe."}]
         }
       }
       
@@ -75,7 +78,10 @@ class UsuarioService {
         return {
           error: true,
           code: 400,
-          message: "El usuario con ese documento ya existe.",
+          message: "Error al crear el usuario",
+          erros: [{
+            campo: "usuario",
+            message: "El usuario con ese documento ya existe."}]
         }
       }
 

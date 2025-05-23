@@ -46,7 +46,7 @@ class UsuarioController {
       const response = await UsuarioService.createUsuario(object);
 
       if (response.error)
-        return ResponseProvider.error(res, response.message, response.code);
+        return ResponseProvider.error(res, response.message, response.code, response.erros);
 
       return ResponseProvider.success(
         res,
