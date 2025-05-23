@@ -1,12 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import cors from "cors";
 import routeCiudad from "./Routes/routeCiudad.js";
 import routeGenero from "./Routes/routeGenero.js";
 import routeLenguaje from "./Routes/routeLenguaje.js";
 import routeUsuario from "./Routes/routeUsuario.js";
 import routeLenguajeUsuario from "./Routes/routeLenguajeUsuario.js";
-import cors from "cors";
-import dotenv from "dotenv";
 
 dotenv.config();
 
