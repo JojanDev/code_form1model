@@ -5,7 +5,7 @@ export const campos = [
     name: "telefono",
     required: true,
     type: "number",
-    minLength: 1,
+    minLength: 10,
     maxLength: 10,
   },
   {
