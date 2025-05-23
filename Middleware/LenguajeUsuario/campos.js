@@ -4,13 +4,13 @@ export const campos = [
     required: true,
     type: "number",
     minLength: 1,
-    maxLength: 11,
+    maxLength: 4,
   },
   {
     name: "id_lenguaje",
     required: true,
     type: "number",
     minLength: 1,
-    maxLength: 11,
+    maxLength: 3,
   },
 ];

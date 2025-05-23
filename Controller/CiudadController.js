@@ -1,41 +1,51 @@
-//Importaciones
-import { ResponseProvider } from "../Providers/ResponseProvider.js"; //Clase "formato" de respuesta
-import CiudadService from "../Services/CiudadService.js"; //Servicio de ciudad
+// Importamos la clase ResponseProvider, que proporciona formatos de respuesta para las solicitudes
+import { ResponseProvider } from "../Providers/ResponseProvider.js"; 
 
-class CiudadController {
-  //Metodo estatico para obtener todas las ciudades
-  static getAllCiudades = async (req, res) => {
+// Importamos el servicio CiudadService, que se encarga de gestionar los datos de ciudades
+import CiudadService from "../Services/CiudadService.js"; 
+
+// Definimos la clase CiudadController, que actuará como el controlador de ciudades
+class CiudadController {  
+  // Definimos un método estático que permite obtener todas las ciudades
+  static getAllCiudades = async (req, res) => {  
     try {
-      //Se envia el argumento a la funcion y obtiene la respuesta del servicio
+      // Llamamos al método getCiudades del servicio CiudadService, pasando como argumento "ciudades"
       const response = await CiudadService.getCiudades("ciudades");
 
-      //Valida 
-      if (response.error)
+      // Validamos si la respuesta contiene un error
+      if (response.error) 
+        // Si hay un error, retornamos una respuesta de error con el mensaje y el código correspondiente
         return ResponseProvider.error(res, response.message, response.code);
 
+      // Si no hay error, enviamos una respuesta de éxito con los datos obtenidos y un mensaje apropiado
       return ResponseProvider.success(
-        res,
-        response.data,
-        response.message,
-        response.code
+        res, // Objeto de respuesta
+        response.data, // Datos obtenidos del servicio
+        response.message, // Mensaje de respuesta
+        response.code // Código de respuesta HTTP
       );
     } catch (error) {
+      // Capturamos cualquier error inesperado y devolvemos una respuesta de error con un mensaje genérico
       return ResponseProvider.error(res, "Error interno en el servidor", 500);
     }
   };
 
+  //Metodo estatico para obtener una ciudad segun su identificador (ID)
   static getCiudadById = async (req, res) => {
-    const { id } = req.params;
     try {
-      // Llamamos al servicio para obtener el producto por su ID
+      //Obtenemos el dato del query params correspondiente al id de la ciudad
+      const { id } = req.params;
+      //Llama al servicio para obtener la data de un producto por su ID
       const response = await CiudadService.getCiudadByID(id);
-      // Validamos si no hay producto
+      // Valida si la respuesta tuvo errores
       if (response.error) {
-        // Llamamos el provider para centralizar los mensajes de respuesta
+        // Llama al metodo error de la clase ResponseProvider para retornar una respuesta
         return ResponseProvider.error(res, response.message, response.code);
       }
+
+      // Llama al metodo success de la clase ResponseProvider para retornar una respuesta
       return ResponseProvider.success(
-        res,
+        res, 
         response.data,
         response.message,
         response.code
@@ -46,14 +56,20 @@ class CiudadController {
     }
   };
 
+  //Metodo estatico para crear una ciudad
   static createCiudad = async (req, res) => {
     try {
+      //Obtiene el cuerpo de la solicitud HTTP, los campos de la tabla
       const object = req.body;
+      //Llama al servicio para crear la ciudad
       const response = await CiudadService.createCiudad(object);
 
+      //Valida errores de la respuesta
       if (response.error)
+        //Retorna y llama al metodo de respuesta error
         return ResponseProvider.error(res, response.message, response.code);
 
+      //Retorna y llama al metodo de respuesta success
       return ResponseProvider.success(
         res,
         response.data,
@@ -61,6 +77,7 @@ class CiudadController {
         response.code
       );
     } catch (error) {
+      //Retorna y llama al metodo de respuesta error
       return ResponseProvider.error(
         res,
         "Error interno al crear la ciudad",
@@ -69,21 +86,21 @@ class CiudadController {
     }
   };
 
-  // Actualizar un producto
+  // Metodo estatico para actualizar una ciudad
   static updateCiudad = async (req, res) => {
     try {
+      //Obtenemos el dato del query params correspondiente al id de la ciudad
       const { id } = req.params;
+      //Obtiene el cuerpo de la solicitud HTTP, los campos de la tabla
       const campos = req.body;
-      // Creamos una instancia de producto
+      //Obtiene la respuesta del metodo del servicio actualizar ciudad
       const response = await CiudadService.updateCiudad(id, campos);
 
-      // Validamos si no se pudo actualizar el producto
-
-      //ESTABA HACIENDO EL PUT DE CIUDAD
+      // Validamos si no se pudo actualizar la ciudad
       if (response.error)
         return ResponseProvider.error(res, response.message, response.code);
 
-      // Retornamos el producto actualizado
+      // Retornamos la ciudad actualizada
       return ResponseProvider.success(
         res,
         response.data,
@@ -100,29 +117,19 @@ class CiudadController {
     }
   };
 
+  //Metodo estatico para eliminar una ciudad
   static deleteCiudad = async (req, res) => {
-    // try {
-    //   const { id } = req.params;
-    //   const objCiudad = new Ciudad();
-
-    //   const ciudad = await objCiudad.delete(id);
-    //   res.status(201).json(ciudad);
-    // } catch (error) {
-    //   res.status(400).json({ error: error.message });
-    // }
-
     try {
+      //Obtenemos el dato del query params correspondiente al id de la ciudad
       const { id } = req.params;
-      // Creamos una instancia de producto
+      // Obtiene la respuesta del servicio
       const response = await CiudadService.deleteCiudad(id);
 
-      // Validamos si no se pudo actualizar el producto
-
-      //ESTABA HACIENDO EL PUT DE CIUDAD
+      // Validamos si no se pudo eliminar la ciudad
       if (response.error)
         return ResponseProvider.error(res, response.message, response.code);
 
-      // Retornamos el producto actualizado
+      //Retorna y llama al metodo de respuesta success
       return ResponseProvider.success(
         res,
         response.data,

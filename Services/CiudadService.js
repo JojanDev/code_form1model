@@ -1,169 +1,108 @@
+// Importamos el modelo CRUD para realizar operaciones en la base de datos
 import CRUD from "../Models/CRUD.js";
+
+// Importamos el modelo Usuario para verificar relaciones antes de eliminar una ciudad
 import Usuario from "../Models/Usuario.js";
 
-class CiudadService {
+// Definimos la clase CiudadService que gestiona las operaciones CRUD relacionadas con ciudades
+class CiudadService {  
+
+  // Método estático para obtener todas las ciudades
   static async getCiudades(table) {
     try {
-      const objCRUD = new CRUD();
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Obtenemos todas las ciudades de la base de datos
       const ciudades = await objCRUD.getAll(table, "las ciudades");
 
+      // Si no hay ciudades registradas, retornamos un mensaje de error
       if (ciudades.length === 0)
-        return {
-          error: true,
-          code: 404,
-          message: "No hay ciudades registradas.",
-        };
-      return {
-        error: false,
-        code: 200,
-        message: "Ciudades obtenidas correctamente.",
-        data: ciudades,
-      };
+        return { error: true, code: 404, message: "No hay ciudades registradas." };
+
+      // Retornamos las ciudades obtenidas
+      return { error: false, code: 200, message: "Ciudades obtenidas correctamente.", data: ciudades };
     } catch (error) {
-      return {
-        error: true,
-        code: 500,
-        message: "Error al obtener las ciudades.",
-      };
+      // Capturamos posibles errores en la ejecución
+      return { error: true, code: 500, message: "Error al obtener las ciudades." };
     }
   }
 
+  // Método estático para obtener una ciudad por su ID
   static async getCiudadByID(id) {
     try {
-      const objCRUD = new CRUD();
-      // Llamamos el método consultar por ID
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Consultamos la ciudad por su ID
       const ciudad = await objCRUD.getByID("ciudades", id, "la ciudad");
-      // Validamos si no hay producto
-      if (ciudad.length === 0) {
-        return {
-          error: true,
-          code: 404,
-          message: "Ciudad no encontrada",
-        };
-      }
-      // Retornamos el producto obtenido
-      return {
-        error: false,
-        code: 200,
-        message: "Ciudad obtenida correctamente",
-        data: ciudad,
-      };
+
+      // Si la ciudad no se encuentra, retornamos un mensaje de error
+      if (ciudad.length === 0)
+        return { error: true, code: 404, message: "Ciudad no encontrada" };
+
+      // Retornamos la ciudad obtenida
+      return { error: false, code: 200, message: "Ciudad obtenida correctamente", data: ciudad };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al obtener la ciudad",
-      };
+      return { error: true, code: 500, message: "Error al obtener la ciudad" };
     }
   }
 
+  // Método estático para crear una nueva ciudad
   static async createCiudad(campos) {
     try {
-      // Validamos que el id de la categoría este registrado
-      const objCRUD = new CRUD();
-      // Consultamos la categoría por ID
-      const ciudadCreada = await objCRUD.create(
-        "ciudades",
-        campos,
-        "la ciudad"
-      );
-      // Validamos si no hay categoría
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Insertamos la nueva ciudad en la base de datos
+      const ciudadCreada = await objCRUD.create("ciudades", campos, "la ciudad");
 
-      return {
-        error: false,
-        code: 201,
-        message: "Ciudad creada correctamente",
-        data: ciudadCreada,
-      };
+      // Retornamos la ciudad creada
+      return { error: false, code: 201, message: "Ciudad creada correctamente", data: ciudadCreada };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al crear la ciudad",
-      };
+      return { error: true, code: 500, message: "Error al crear la ciudad" };
     }
   }
 
+  // Método estático para actualizar una ciudad por su ID
   static async updateCiudad(id, campos) {
     try {
-      // Creamos la instancia del modelo producto
-      const objCRUD = new CRUD();
-      // Llamamos el método actualizar
-      const ciudadActualizada = await objCRUD.update(
-        "ciudades",
-        id,
-        campos,
-        "la ciudad"
-      );
-      // Validamos si no se pudo actualizar el producto
-      if (ciudadActualizada === null) {
-        return {
-          error: true,
-          code: 400,
-          message: "Ciudad no encontrada",
-        };
-      }
-      // Retornamos el producto actualizado
-      return {
-        error: false,
-        code: 200,
-        message: "Ciudad actualizada correctamente",
-        data: ciudadActualizada,
-      };
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Actualizamos la ciudad en la base de datos
+      const ciudadActualizada = await objCRUD.update("ciudades", id, campos, "la ciudad");
+
+      // Si la ciudad no se encontró, retornamos un mensaje de error
+      if (ciudadActualizada === null)
+        return { error: true, code: 400, message: "Ciudad no encontrada" };
+
+      // Retornamos la ciudad actualizada
+      return { error: false, code: 200, message: "Ciudad actualizada correctamente", data: ciudadActualizada };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al actualizar la ciudad",
-      };
+      return { error: true, code: 500, message: "Error al actualizar la ciudad" };
     }
   }
 
+  // Método estático para eliminar una ciudad por su ID
   static async deleteCiudad(id) {
     try {
-      //Creamos la instancia del modelo Usuario
-      const objUsuario = new Usuario();
+      const objUsuario = new Usuario(); // Instanciamos el objeto Usuario
 
+      // Verificamos si hay usuarios relacionados con la ciudad antes de eliminarla
       const usuariosRelacionados = await objUsuario.getCiudadByIdCiudad(id);
-
       if (usuariosRelacionados.length > 0) {
-        return {
-          error: true,
-          code: 400,
-          message: "No se puede eliminar la ciudad, tiene usuarios asociados",
-        };
+        return { error: true, code: 400, message: "No se puede eliminar la ciudad, tiene usuarios asociados" };
       }
 
-      // Creamos la instancia del modelo producto
-      const objCRUD = new CRUD();
-      // Llamamos el método eliminar
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Eliminamos la ciudad en la base de datos
       const ciudadEliminada = await objCRUD.delete("ciudades", id, "la ciudad");
-      // Validamos si no se pudo eliminar el producto
+
+      // Si la ciudad no se encuentra, retornamos un mensaje de error
       if (!ciudadEliminada) {
-        return {
-          error: true,
-          code: 400,
-          message: "Ciudad no encontrada",
-        };
+        return { error: true, code: 400, message: "Ciudad no encontrada" };
       }
-      // Retornamos el producto eliminado
-      return {
-        error: false,
-        code: 200,
-        message: "Ciudad eliminada correctamente",
-      };
+
+      // Retornamos la confirmación de eliminación
+      return { error: false, code: 200, message: "Ciudad eliminada correctamente" };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al eliminar la ciudad",
-      };
+      return { error: true, code: 500, message: "Error al eliminar la ciudad" };
     }
   }
 }
 
+// Exportamos la clase CiudadService para su uso en otros módulos
 export default CiudadService;

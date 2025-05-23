@@ -1,165 +1,108 @@
+// Importamos el modelo CRUD para realizar operaciones en la base de datos
 import CRUD from "../Models/CRUD.js";
+
+// Importamos el modelo Usuario para verificar relaciones antes de eliminar un género
 import Usuario from "../Models/Usuario.js";
 
-class GeneroService {
+// Definimos la clase GeneroService que gestiona las operaciones CRUD relacionadas con géneros
+class GeneroService {  
+
+  // Método estático para obtener todos los géneros
   static async getGeneros(table) {
     try {
-      const objCRUD = new CRUD();
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Obtenemos todos los géneros desde la base de datos
       const generos = await objCRUD.getAll(table, "los géneros");
 
+      // Si no hay géneros registrados, retornamos un mensaje de error
       if (generos.length === 0)
-        return {
-          error: true,
-          code: 404,
-          message: "No hay géneros registrados.",
-        };
-      return {
-        error: false,
-        code: 200,
-        message: "Géneros obtenidos correctamente.",
-        data: generos,
-      };
+        return { error: true, code: 404, message: "No hay géneros registrados." };
+
+      // Retornamos los géneros obtenidos
+      return { error: false, code: 200, message: "Géneros obtenidos correctamente.", data: generos };
     } catch (error) {
-      return {
-        error: true,
-        code: 500,
-        message: "Error al obtener los géneros.",
-      };
+      // Capturamos posibles errores en la ejecución
+      return { error: true, code: 500, message: "Error al obtener los géneros." };
     }
   }
 
+  // Método estático para obtener un género por su ID
   static async getGeneroByID(id) {
     try {
-      const objCRUD = new CRUD();
-      // Llamamos el método consultar por ID
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Consultamos el género por su ID
       const genero = await objCRUD.getByID("generos", id, "el género");
-      // Validamos si no hay producto
-      if (genero.length === 0) {
-        return {
-          error: true,
-          code: 404,
-          message: "Género no encontrado",
-        };
-      }
-      // Retornamos el producto obtenido
-      return {
-        error: false,
-        code: 200,
-        message: "Género obtenido correctamente",
-        data: genero,
-      };
+
+      // Si el género no se encuentra, retornamos un mensaje de error
+      if (genero.length === 0)
+        return { error: true, code: 404, message: "Género no encontrado" };
+
+      // Retornamos el género obtenido
+      return { error: false, code: 200, message: "Género obtenido correctamente", data: genero };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al obtener el género",
-      };
+      return { error: true, code: 500, message: "Error al obtener el género" };
     }
   }
 
+  // Método estático para crear un nuevo género
   static async createGenero(campos) {
     try {
-      // Validamos que el id de la categoría este registrado
-      const objCRUD = new CRUD();
-      // Consultamos la categoría por ID
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Insertamos el nuevo género en la base de datos
       const generoCreado = await objCRUD.create("generos", campos, "el género");
-      // Validamos si no hay categoría
 
-      return {
-        error: false,
-        code: 201,
-        message: "Género creado correctamente",
-        data: generoCreado,
-      };
+      // Retornamos el género creado
+      return { error: false, code: 201, message: "Género creado correctamente", data: generoCreado };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al crear el género",
-      };
+      return { error: true, code: 500, message: "Error al crear el género" };
     }
   }
 
+  // Método estático para actualizar un género por su ID
   static async updateGenero(id, campos) {
     try {
-      // Creamos la instancia del modelo producto
-      const objCRUD = new CRUD();
-      // Llamamos el método actualizar
-      const generoActualizado = await objCRUD.update(
-        "generos",
-        id,
-        campos,
-        "el género"
-      );
-      // Validamos si no se pudo actualizar el producto
-      if (generoActualizado === null) {
-        return {
-          error: true,
-          code: 400,
-          message: "Género no encontrado",
-        };
-      }
-      // Retornamos el producto actualizado
-      return {
-        error: false,
-        code: 200,
-        message: "Género actualizado correctamente",
-        data: generoActualizado,
-      };
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Actualizamos el género en la base de datos
+      const generoActualizado = await objCRUD.update("generos", id, campos, "el género");
+
+      // Si el género no se encontró, retornamos un mensaje de error
+      if (generoActualizado === null)
+        return { error: true, code: 400, message: "Género no encontrado" };
+
+      // Retornamos el género actualizado
+      return { error: false, code: 200, message: "Género actualizado correctamente", data: generoActualizado };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al actualizar el género",
-      };
+      return { error: true, code: 500, message: "Error al actualizar el género" };
     }
   }
 
+  // Método estático para eliminar un género por su ID
   static async deleteGenero(id) {
     try {
-      //Creamos la instancia del modelo Usuario
-      const objUsuario = new Usuario();
+      const objUsuario = new Usuario(); // Instanciamos el objeto Usuario
 
+      // Verificamos si hay usuarios relacionados con el género antes de eliminarlo
       const usuariosRelacionados = await objUsuario.getGeneroByIdGenero(id);
-
       if (usuariosRelacionados.length > 0) {
-        return {
-          error: true,
-          code: 400,
-          message: "No se puede eliminar el genero, tiene usuarios asociados",
-        };
+        return { error: true, code: 400, message: "No se puede eliminar el género, tiene usuarios asociados" };
       }
 
-      // Creamos la instancia del modelo producto
-      const objCRUD = new CRUD();
-      // Llamamos el método eliminar
+      const objCRUD = new CRUD(); // Instanciamos el objeto CRUD
+      // Eliminamos el género en la base de datos
       const generoEliminado = await objCRUD.delete("generos", id, "el género");
-      // Validamos si no se pudo eliminar el producto
+
+      // Si el género no se encuentra, retornamos un mensaje de error
       if (!generoEliminado) {
-        return {
-          error: true,
-          code: 400,
-          message: "Género no encontrado",
-        };
+        return { error: true, code: 400, message: "Género no encontrado" };
       }
-      // Retornamos el producto eliminado
-      return {
-        error: false,
-        code: 200,
-        message: "Género eliminado correctamente",
-      };
+
+      // Retornamos la confirmación de eliminación
+      return { error: false, code: 200, message: "Género eliminado correctamente" };
     } catch (error) {
-      // Retornamos un error en caso de excepción
-      return {
-        error: true,
-        code: 500,
-        message: "Error al eliminar el género",
-      };
+      return { error: true, code: 500, message: "Error al eliminar el género" };
     }
   }
 }
 
+// Exportamos la clase GeneroService para su uso en otros módulos
 export default GeneroService;
