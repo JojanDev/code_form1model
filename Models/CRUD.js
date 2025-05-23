@@ -60,7 +60,7 @@ class CRUD {
 
       // Ejecuta la consulta con los parámetros usando el objeto 'connection'
       const [result] = await connection.query(query, params);
-
+      
       // Devuelve el id insertado y los campos insertados como objeto
       return {
         id: result.insertId, // ID del nuevo registro insertado
@@ -68,6 +68,8 @@ class CRUD {
       };
     } catch (error) {
       // Lanza un error personalizado si la operación falla
+      console.log(error);
+      
       throw new Error(`Error al crear ${message}`);
     }
   }

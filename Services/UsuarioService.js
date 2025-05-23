@@ -1,4 +1,5 @@
 import CRUD from "../Models/CRUD.js";
+import Usuario from "../Models/Usuario.js";
 
 class UsuarioService {
   static async getUsuarios(table) {
@@ -55,12 +56,37 @@ class UsuarioService {
 
   static async createUsuario(campos) {
     try {
+
       const objCRUD = new CRUD();
+      const usuarios = await objCRUD.getAll('usuarios', 'los usuarios');
+
+      const usernameExist = usuarios.find(({ usuario }) => usuario == campos.usuario);
+      const documentoExist = usuarios.find(({ documento }) => documento == campos.documento);
+
+      if (usernameExist) {
+        return {
+          error: true,
+          code: 400,
+          message: "El usuario con ese nombre de usuario ya existe.",
+        }
+      }
+      
+      if (documentoExist) {
+        return {
+          error: true,
+          code: 400,
+          message: "El usuario con ese documento ya existe.",
+        }
+      }
+
+      // console.log(campos.documento + " - " + campos.usuario);
+      
       const usuarioCreado = await objCRUD.create(
         "usuarios",
         campos,
         "el usuario"
       );
+
       return {
         error: false,
         code: 201,

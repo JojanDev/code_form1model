@@ -22,13 +22,13 @@ export const campos = [
     required: true,
     type: "number",
     minLength: 1,
-    maxLength: 11,
+    maxLength: 2,
   },
   {
     name: "id_ciudad",
     required: true,
     type: "number",
     minLength: 1,
-    maxLength: 11,
+    maxLength: 2,
   },
 ];
